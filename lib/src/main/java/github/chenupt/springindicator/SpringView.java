@@ -80,7 +80,7 @@ public class SpringView extends View {
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.OVERLAY);
 //        canvas.drawPath(path, paint);
         canvas.drawCircle(headPoint.getX(), headPoint.getY(), headPoint.getRadius(), paint);
-        canvas.drawCircle(footPoint.getX(), headPoint.getY(), headPoint.getRadius(), paint);
+        canvas.drawCircle(footPoint.getX(), footPoint.getY(), footPoint.getRadius(), paint);
         super.onDraw(canvas);
     }
 

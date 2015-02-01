@@ -17,6 +17,7 @@
 package github.chenupt.springindicator;
 
 import android.content.Context;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -32,7 +33,7 @@ import java.util.List;
  * Created by chenupt@gmail.com on 2015/1/31.
  * Description TODO
  */
-public class SpringIndicator extends FrameLayout{
+public class SpringIndicator extends FrameLayout {
 
     private LinearLayout container;
     private SpringView springView;
@@ -49,7 +50,7 @@ public class SpringIndicator extends FrameLayout{
     }
 
 
-    private void init(){
+    private void init() {
         tabs = new ArrayList<>();
 
         addPoints();
@@ -61,12 +62,12 @@ public class SpringIndicator extends FrameLayout{
         addItems();
     }
 
-    private void addPoints(){
+    private void addPoints() {
         springView = new SpringView(getContext());
         addView(springView);
     }
 
-    private void addItems(){
+    private void addItems() {
         for (int i = 0; i < 4; i++) {
             TextView textView = new TextView(getContext());
             textView.setText(String.valueOf(i));
@@ -77,16 +78,23 @@ public class SpringIndicator extends FrameLayout{
         }
     }
 
-    private void setHead(){
+    private OnClickListener listener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+        }
+    };
+
+    private void setHead() {
         View view = tabs.get(0);
-        springView.getHeadPoint().setX(view.getX() + view.getWidth()/2);
-        springView.getHeadPoint().setY(view.getY() + view.getHeight()/2);
+        springView.getHeadPoint().setX(view.getX() + view.getWidth() / 2);
+        springView.getHeadPoint().setY(view.getY() + view.getHeight() / 2);
     }
 
-    private void setFoot(){
+    private void setFoot() {
         View view = tabs.get(1);
-        springView.getFootPoint().setX(view.getX() + view.getWidth()/2);
-        springView.getFootPoint().setY(view.getY() + view.getHeight()/2);
+        springView.getFootPoint().setX(view.getX() + view.getWidth() / 2);
+        springView.getFootPoint().setY(view.getY() + view.getHeight() / 2);
     }
 
 
@@ -94,6 +102,38 @@ public class SpringIndicator extends FrameLayout{
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         setHead();
-        setFoot();
+//        setFoot();
+    }
+
+    private int position;
+
+    public void setViewPager(final ViewPager viewPager) {
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if(position < tabs.size()-1){
+                    float tarX = tabs.get(position + 1).getX();
+                    float oriX = tabs.get(position).getX();
+                    float distance = oriX - tarX;
+                    springView.getHeadPoint().setX(getTabX(position) - positionOffset * distance);
+                    springView.postInvalidate();
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private float getTabX(int position) {
+        return tabs.get(position).getX() + tabs.get(position).getWidth() / 2;
     }
 }

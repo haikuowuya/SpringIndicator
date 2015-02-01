@@ -24,7 +24,7 @@ public class Point {
 
     private float x;
     private float y;
-    private float radius = 100;
+    private float radius = 50;
     private int color;
 
     public float getX() {
