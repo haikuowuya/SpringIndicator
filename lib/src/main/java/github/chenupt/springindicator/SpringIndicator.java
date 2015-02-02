@@ -72,7 +72,7 @@ public class SpringIndicator extends FrameLayout {
             TextView textView = new TextView(getContext());
             textView.setText(String.valueOf(i));
             textView.setTextSize(18);
-            textView.setPadding(50, 0, 50, 0);
+            textView.setPadding(100, 0, 100, 0);
             tabs.add(textView);
             container.addView(textView);
         }
@@ -92,7 +92,7 @@ public class SpringIndicator extends FrameLayout {
     }
 
     private void setFoot() {
-        View view = tabs.get(1);
+        View view = tabs.get(0);
         springView.getFootPoint().setX(view.getX() + view.getWidth() / 2);
         springView.getFootPoint().setY(view.getY() + view.getHeight() / 2);
     }
@@ -102,22 +102,45 @@ public class SpringIndicator extends FrameLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         setHead();
-//        setFoot();
+        setFoot();
     }
 
-    private int position;
 
     public void setViewPager(final ViewPager viewPager) {
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if(position < tabs.size()-1){
-                    float tarX = tabs.get(position + 1).getX();
-                    float oriX = tabs.get(position).getX();
-                    float distance = oriX - tarX;
-                    springView.getHeadPoint().setX(getTabX(position) - positionOffset * distance);
+                if (position < tabs.size() - 1) {
+//                    float headX = (float) Math.sqrt(positionOffset);
+//                    float footX = (float) Math.sqrt(1-positionOffset);
+//                    springView.getHeadPoint().setX(getTabX(position) - headX * getDistance(position));
+//                    springView.getFootPoint().setX(getTabX(position) - (1-footX) * getDistance(position));
+
+                    float offset = 0.3f;
+                    if(positionOffset < offset){
+                        float headX = (float) Math.sqrt(positionOffset/offset);
+
+                        springView.getHeadPoint().setX(getTabX(position) - headX * getDistance(position));
+                        springView.getHeadPoint().setRadius(30);
+                        springView.getFootPoint().setX(getTabX(position));
+                        springView.getFootPoint().setRadius((1-headX) * 30 + 30);
+                    }else{
+                        float footX = (float) Math.sqrt((positionOffset-offset)/(1-offset));
+                        springView.getFootPoint().setX(getTabX(position) - footX * getDistance(position));
+                        springView.getHeadPoint().setX(getTabX(position) - 1 * getDistance(position));
+                        springView.getHeadPoint().setRadius(((positionOffset-offset)/(1-offset) * 30 + 30));
+                        springView.getFootPoint().setRadius(30);
+                    }
+
+
+                    if(positionOffset == 0){
+                        springView.getHeadPoint().setRadius(60);
+                        springView.getFootPoint().setRadius(60);
+                    }
+
                     springView.postInvalidate();
+
                 }
             }
 
@@ -131,6 +154,12 @@ public class SpringIndicator extends FrameLayout {
 
             }
         });
+    }
+
+    private float getDistance(int position) {
+        float tarX = tabs.get(position + 1).getX();
+        float oriX = tabs.get(position).getX();
+        return oriX - tarX;
     }
 
     private float getTabX(int position) {
