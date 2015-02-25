@@ -116,7 +116,7 @@ public class SpringIndicator extends FrameLayout {
                     float accelerateTemp = 0.5f;
                     float headOffset = 0.6f;
                     float footOffset = 1-headOffset;
-                    float radio = 30;
+                    float radio = 35;
 
                     // radio
                     float radioOffsetHead = 0.5f;
