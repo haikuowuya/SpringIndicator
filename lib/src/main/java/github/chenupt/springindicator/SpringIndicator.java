@@ -113,44 +113,46 @@ public class SpringIndicator extends FrameLayout {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position < tabs.size() - 1) {
 
-                    float accelerateTemp = 0.5f;
+                    float acceleration = 0.5f;
                     float headOffset = 0.6f;
                     float footOffset = 1-headOffset;
-                    float radio = 35;
+                    float radioMax = 65;
+                    float radioMin = 20;
+                    float radioOffset = radioMax - radioMin;
 
                     // radio
                     float radioOffsetHead = 0.5f;
                     if(positionOffset < radioOffsetHead){
-                        springView.getHeadPoint().setRadius(radio);
+                        springView.getHeadPoint().setRadius(radioMin);
                     }else{
-                        springView.getHeadPoint().setRadius(((positionOffset-radioOffsetHead)/(1-radioOffsetHead) * radio + radio));
+                        springView.getHeadPoint().setRadius(((positionOffset-radioOffsetHead)/(1-radioOffsetHead) * radioOffset + radioMin));
                     }
                     float radioOffsetFoot = 0.5f;
                     if(positionOffset < radioOffsetFoot){
-                        springView.getFootPoint().setRadius((1-positionOffset/radioOffsetFoot) * radio + radio);
+                        springView.getFootPoint().setRadius((1-positionOffset/radioOffsetFoot) * radioOffset + radioMin);
                     }else{
-                        springView.getFootPoint().setRadius(radio);
+                        springView.getFootPoint().setRadius(radioMin);
                     }
 
                     // x
                     float headX = 1f;
                     if (positionOffset < headOffset){
                         float positionOffsetTemp = positionOffset / headOffset;
-                        headX = (float) ((Math.atan(positionOffsetTemp*accelerateTemp*2 - accelerateTemp ) + (Math.atan(accelerateTemp))) / (2 * (Math.atan(accelerateTemp))));
+                        headX = (float) ((Math.atan(positionOffsetTemp*acceleration*2 - acceleration ) + (Math.atan(acceleration))) / (2 * (Math.atan(acceleration))));
                     }
                     springView.getHeadPoint().setX(getTabX(position) - headX * getDistance(position));
                     float footX = 0f;
                     if (positionOffset > footOffset){
                         float positionOffsetTemp = (positionOffset-footOffset) / (1-footOffset);
-                        footX = (float) ((Math.atan(positionOffsetTemp*accelerateTemp*2 - accelerateTemp ) + (Math.atan(accelerateTemp))) / (2 * (Math.atan(accelerateTemp))));
+                        footX = (float) ((Math.atan(positionOffsetTemp*acceleration*2 - acceleration ) + (Math.atan(acceleration))) / (2 * (Math.atan(acceleration))));
                     }
                     springView.getFootPoint().setX(getTabX(position) - footX * getDistance(position));
 
 
 
                     if(positionOffset == 0){
-                        springView.getHeadPoint().setRadius(radio * 2);
-                        springView.getFootPoint().setRadius(radio * 2);
+                        springView.getHeadPoint().setRadius(radioMax);
+                        springView.getFootPoint().setRadius(radioMax);
                     }
 
                     springView.postInvalidate();
