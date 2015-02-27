@@ -31,10 +31,8 @@ import android.view.View;
  */
 public class SpringView extends View {
 
-    public static final float DEFAULT_RADIUS = 200;
     private Paint paint;
     private Path path;
-    private float radius = DEFAULT_RADIUS;
 
     private Point headPoint;
     private Point footPoint;
@@ -61,7 +59,7 @@ public class SpringView extends View {
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setStrokeWidth(2);
+        paint.setStrokeWidth(1);
         paint.setColor(Color.RED);
     }
 
