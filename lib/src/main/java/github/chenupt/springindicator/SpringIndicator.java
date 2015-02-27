@@ -36,14 +36,15 @@ import java.util.List;
 public class SpringIndicator extends FrameLayout {
 
     private float acceleration = 0.5f;
-    private float headOffset = 0.6f;
-    private float footOffset = 1-headOffset;
+    private float headMoveOffset = 0.6f;
+    private float footMoveOffset = 1- headMoveOffset;
     private float radiusMax = 65;
     private float radiusMin = 20;
     private float radiusOffset = radiusMax - radiusMin;
 
     private LinearLayout tabContainer;
     private SpringView springView;
+    private ViewPager viewPager;
 
     private List<View> tabs;
 
@@ -53,7 +54,7 @@ public class SpringIndicator extends FrameLayout {
 
     public SpringIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+
     }
 
     private void init() {
@@ -69,30 +70,33 @@ public class SpringIndicator extends FrameLayout {
 
     private void addTabContainerView() {
         tabContainer = new LinearLayout(getContext());
-        tabContainer.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        tabContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f));
         tabContainer.setOrientation(LinearLayout.HORIZONTAL);
         tabContainer.setGravity(Gravity.CENTER);
         addView(tabContainer);
     }
 
     private void addTabItems() {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
         tabs = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             TextView textView = new TextView(getContext());
-            textView.setText(String.valueOf(i));
+            textView.setText(viewPager.getAdapter().getPageTitle(i));
+            textView.setGravity(Gravity.CENTER);
             textView.setTextSize(18);
-            textView.setPadding(100, 0, 100, 0);
+            textView.setLayoutParams(layoutParams);
+            final int position = i;
+            textView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewPager.setCurrentItem(position);
+                }
+            });
             tabs.add(textView);
             tabContainer.addView(textView);
         }
     }
 
-    private OnClickListener listener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-        }
-    };
 
     private void createHeadPoint() {
         View view = tabs.get(0);
@@ -116,7 +120,12 @@ public class SpringIndicator extends FrameLayout {
 
 
     public void setViewPager(final ViewPager viewPager) {
+        this.viewPager = viewPager;
+        init();
+        setUpListener();
+    }
 
+    private void setUpListener(){
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -138,14 +147,14 @@ public class SpringIndicator extends FrameLayout {
 
                     // x
                     float headX = 1f;
-                    if (positionOffset < headOffset){
-                        float positionOffsetTemp = positionOffset / headOffset;
+                    if (positionOffset < headMoveOffset){
+                        float positionOffsetTemp = positionOffset / headMoveOffset;
                         headX = (float) ((Math.atan(positionOffsetTemp*acceleration*2 - acceleration ) + (Math.atan(acceleration))) / (2 * (Math.atan(acceleration))));
                     }
                     springView.getHeadPoint().setX(getTabX(position) - headX * getPositionDistance(position));
                     float footX = 0f;
-                    if (positionOffset > footOffset){
-                        float positionOffsetTemp = (positionOffset-footOffset) / (1-footOffset);
+                    if (positionOffset > footMoveOffset){
+                        float positionOffsetTemp = (positionOffset- footMoveOffset) / (1- footMoveOffset);
                         footX = (float) ((Math.atan(positionOffsetTemp*acceleration*2 - acceleration ) + (Math.atan(acceleration))) / (2 * (Math.atan(acceleration))));
                     }
                     springView.getFootPoint().setX(getTabX(position) - footX * getPositionDistance(position));

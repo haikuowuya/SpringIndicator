@@ -18,12 +18,14 @@ import github.chenupt.springindicator.SpringIndicator;
 
 public class MainActivity extends ActionBarActivity {
 
+    ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
         SpringIndicator springIndicator = (SpringIndicator) findViewById(R.id.indicator);
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -32,6 +34,7 @@ public class MainActivity extends ActionBarActivity {
         manager.addCommonFragment(GuideFragment.class, getTitles(), getTitles());
         ModelPagerAdapter adapter = new ModelPagerAdapter(getSupportFragmentManager(), manager);
         viewPager.setAdapter(adapter);
+
         springIndicator.setViewPager(viewPager);
     }
 
