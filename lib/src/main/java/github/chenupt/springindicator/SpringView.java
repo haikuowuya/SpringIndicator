@@ -37,6 +37,8 @@ public class SpringView extends View {
     private Point headPoint;
     private Point footPoint;
 
+    private int indicatorColor;
+
     public SpringView(Context context) {
         this(context, null);
     }
@@ -60,7 +62,6 @@ public class SpringView extends View {
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setStrokeWidth(1);
-        paint.setColor(Color.RED);
     }
 
     private void makePath(){
@@ -110,5 +111,10 @@ public class SpringView extends View {
 
     public Point getFootPoint() {
         return footPoint;
+    }
+
+    public void setIndicatorColor(int color){
+        this.indicatorColor = color;
+        paint.setColor(Color.RED);
     }
 }

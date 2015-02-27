@@ -17,8 +17,10 @@
 package github.chenupt.springindicator;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,11 +44,15 @@ public class SpringIndicator extends FrameLayout {
     private float radiusMin = 20;
     private float radiusOffset = radiusMax - radiusMin;
 
+    private float textSize = 18.0f;
+    private int textColor = android.R.color.white;
+    private int indicatorColor = android.R.color.black;
+
     private LinearLayout tabContainer;
     private SpringView springView;
     private ViewPager viewPager;
 
-    private List<View> tabs;
+    private List<TextView> tabs;
 
     public SpringIndicator(Context context) {
         this(context, null);
@@ -54,10 +60,26 @@ public class SpringIndicator extends FrameLayout {
 
     public SpringIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        initAttrs(attrs);
     }
 
-    private void init() {
+    private void initAttrs(AttributeSet attrs){
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SpringIndicator);
+        textColor = a.getResourceId(R.styleable.SpringIndicator_android_textColor, textColor);
+        textSize = a.getDimension(R.styleable.SpringIndicator_android_textSize, textSize);
+        indicatorColor = a.getResourceId(R.styleable.SpringIndicator_indicatorColor, indicatorColor);
+        a.recycle();
+    }
+
+
+    public void setViewPager(final ViewPager viewPager) {
+        this.viewPager = viewPager;
+        initSpringView();
+        setUpListener();
+    }
+
+
+    private void initSpringView() {
         addPointView();
         addTabContainerView();
         addTabItems();
@@ -65,6 +87,7 @@ public class SpringIndicator extends FrameLayout {
 
     private void addPointView() {
         springView = new SpringView(getContext());
+        springView.setIndicatorColor(indicatorColor);
         addView(springView);
     }
 
@@ -79,11 +102,12 @@ public class SpringIndicator extends FrameLayout {
     private void addTabItems() {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
         tabs = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < viewPager.getAdapter().getCount(); i++) {
             TextView textView = new TextView(getContext());
             textView.setText(viewPager.getAdapter().getPageTitle(i));
             textView.setGravity(Gravity.CENTER);
-            textView.setTextSize(18);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+            textView.setTextColor(getResources().getColor(textColor));
             textView.setLayoutParams(layoutParams);
             final int position = i;
             textView.setOnClickListener(new OnClickListener() {
@@ -97,15 +121,14 @@ public class SpringIndicator extends FrameLayout {
         }
     }
 
-
     private void createHeadPoint() {
-        View view = tabs.get(0);
+        View view = tabs.get(viewPager.getCurrentItem());
         springView.getHeadPoint().setX(view.getX() + view.getWidth() / 2);
         springView.getHeadPoint().setY(view.getY() + view.getHeight() / 2);
     }
 
     private void createFootPoint() {
-        View view = tabs.get(0);
+        View view = tabs.get(viewPager.getCurrentItem());
         springView.getFootPoint().setX(view.getX() + view.getWidth() / 2);
         springView.getFootPoint().setY(view.getY() + view.getHeight() / 2);
     }
@@ -118,12 +141,6 @@ public class SpringIndicator extends FrameLayout {
         createFootPoint();
     }
 
-
-    public void setViewPager(final ViewPager viewPager) {
-        this.viewPager = viewPager;
-        init();
-        setUpListener();
-    }
 
     private void setUpListener(){
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -180,5 +197,11 @@ public class SpringIndicator extends FrameLayout {
 
     private float getTabX(int position) {
         return tabs.get(position).getX() + tabs.get(position).getWidth() / 2;
+    }
+
+
+
+    public List<TextView> getTabs(){
+        return tabs;
     }
 }

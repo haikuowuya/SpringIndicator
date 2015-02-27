@@ -25,7 +25,10 @@
             android:layout_height="match_parent"
             android:layout_gravity="center" />
 
-        <github.chenupt.springindicator.SpringIndicator
+        <github.chenupt.springindicator.SpringIndicator xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimaryDark"
+            app:indicatorColor="@color/black"
             android:id="@+id/indicator"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
