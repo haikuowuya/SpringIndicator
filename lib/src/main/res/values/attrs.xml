@@ -2,18 +2,25 @@
 <resources>
     <declare-styleable name="SpringIndicator">
 
+        <!--tab text color -->
         <attr name="textColor" format="reference"/>
 
+        <!--tab text color which is selected-->
         <attr name="selectedTextColor" format="reference"/>
 
+        <!--tab text size-->
         <attr name="textSize" format="dimension"/>
 
+        <!--indicator bg color-->
         <attr name="indicatorColor" format="reference"/>
 
+        <!--indicator bg colors. should equals your titles count-->
         <attr name="indicatorColors" format="reference"/>
 
+        <!--max indicator radius-->
         <attr name="radiusMax" format="dimension"/>
 
+        <!--min indicator radius when moving-->
         <attr name="radiusMin" format="dimension"/>
 
     </declare-styleable>

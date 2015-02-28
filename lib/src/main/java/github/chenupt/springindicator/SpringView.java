@@ -30,7 +30,7 @@ import android.view.animation.OvershootInterpolator;
 
 /**
  * Created by chenupt@gmail.com on 2015/1/31.
- * Description TODO
+ * Description : Draw a head point and foot point.
  */
 public class SpringView extends View {
 

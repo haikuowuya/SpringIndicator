@@ -18,7 +18,7 @@ package github.chenupt.springindicator;
 
 /**
  * Created by chenupt@gmail.com on 2015/1/31.
- * Description TODO
+ * Description : SpringView point
  */
 public class Point {
 

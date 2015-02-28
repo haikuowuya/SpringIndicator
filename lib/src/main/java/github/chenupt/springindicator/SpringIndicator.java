@@ -35,7 +35,7 @@ import java.util.List;
 
 /**
  * Created by chenupt@gmail.com on 2015/1/31.
- * Description TODO
+ * Description : Tab layout container
  */
 public class SpringIndicator extends FrameLayout {
 
@@ -75,12 +75,12 @@ public class SpringIndicator extends FrameLayout {
     }
 
     private void initAttrs(AttributeSet attrs){
-        textColorId = R.color.default_text_color;
-        selectedTextColorId = R.color.default_text_color_selected;
-        indicatorColorId = R.color.default_indicator_bg;
-        textSize = getResources().getDimension(R.dimen.default_text_size);
-        radiusMax = getResources().getDimension(R.dimen.default_radius_max);
-        radiusMin = getResources().getDimension(R.dimen.default_radius_min);
+        textColorId = R.color.si_default_text_color;
+        selectedTextColorId = R.color.si_default_text_color_selected;
+        indicatorColorId = R.color.si_default_indicator_bg;
+        textSize = getResources().getDimension(R.dimen.si_default_text_size);
+        radiusMax = getResources().getDimension(R.dimen.si_default_radius_max);
+        radiusMin = getResources().getDimension(R.dimen.si_default_radius_min);
 
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SpringIndicator);
         textColorId = a.getResourceId(R.styleable.SpringIndicator_textColor, textColorId);
@@ -150,6 +150,9 @@ public class SpringIndicator extends FrameLayout {
         }
     }
 
+    /**
+     * Set current point position.
+     */
     private void createPoints(){
         View view = tabs.get(viewPager.getCurrentItem());
         springView.getHeadPoint().setX(view.getX() + view.getWidth() / 2);
@@ -224,6 +227,7 @@ public class SpringIndicator extends FrameLayout {
                 }
 
                 // set indicator colors
+                // https://github.com/TaurusXi/GuideBackgroundColorAnimation
                 if (indicatorColorsId != 0){
                     float length = (position + positionOffset) / viewPager.getAdapter().getCount();
                     int progress = (int) (length * INDICATOR_ANIM_DURATION);
@@ -264,7 +268,7 @@ public class SpringIndicator extends FrameLayout {
         tabs.get(position).setTextColor(getResources().getColor(selectedTextColorId));
     }
 
-    private void createColorAnim(){
+    private void createIndicatorColorAnim(){
         indicatorColorAnim = ObjectAnimator.ofInt(springView, "indicatorColor", indicatorColorArray);
         indicatorColorAnim.setEvaluator(new ArgbEvaluator());
         indicatorColorAnim.setDuration(INDICATOR_ANIM_DURATION);
@@ -272,7 +276,7 @@ public class SpringIndicator extends FrameLayout {
 
     private void seek(long seekTime) {
         if (indicatorColorAnim == null) {
-            createColorAnim();
+            createIndicatorColorAnim();
         }
         indicatorColorAnim.setCurrentPlayTime(seekTime);
     }
