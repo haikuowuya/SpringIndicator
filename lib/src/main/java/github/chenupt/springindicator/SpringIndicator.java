@@ -39,14 +39,14 @@ import java.util.List;
  */
 public class SpringIndicator extends FrameLayout {
 
-    private static final int DURATION = 3000;
+    private static final int INDICATOR_ANIM_DURATION = 3000;
 
     private float acceleration = 0.5f;
     private float headMoveOffset = 0.6f;
     private float footMoveOffset = 1- headMoveOffset;
-    private float radiusMax = 65;
-    private float radiusMin = 20;
-    private float radiusOffset = radiusMax - radiusMin;
+    private float radiusMax;
+    private float radiusMin;
+    private float radiusOffset;
 
     private float textSize;
     private int textColorId;
@@ -79,6 +79,8 @@ public class SpringIndicator extends FrameLayout {
         selectedTextColorId = R.color.default_text_color_selected;
         indicatorColorId = R.color.default_indicator_bg;
         textSize = getResources().getDimension(R.dimen.default_text_size);
+        radiusMax = getResources().getDimension(R.dimen.default_radius_max);
+        radiusMin = getResources().getDimension(R.dimen.default_radius_min);
 
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SpringIndicator);
         textColorId = a.getResourceId(R.styleable.SpringIndicator_textColor, textColorId);
@@ -86,11 +88,14 @@ public class SpringIndicator extends FrameLayout {
         textSize = a.getDimension(R.styleable.SpringIndicator_textSize, textSize);
         indicatorColorId = a.getResourceId(R.styleable.SpringIndicator_indicatorColor, indicatorColorId);
         indicatorColorsId = a.getResourceId(R.styleable.SpringIndicator_indicatorColors, 0);
+        radiusMax = a.getDimension(R.styleable.SpringIndicator_radiusMax, radiusMax);
+        radiusMin = a.getDimension(R.styleable.SpringIndicator_radiusMin, radiusMin);
         a.recycle();
 
         if(indicatorColorsId != 0){
             indicatorColorArray = getResources().getIntArray(indicatorColorsId);
         }
+        radiusOffset = radiusMax - radiusMin;
     }
 
 
@@ -152,8 +157,6 @@ public class SpringIndicator extends FrameLayout {
         springView.getFootPoint().setX(view.getX() + view.getWidth() / 2);
         springView.getFootPoint().setY(view.getY() + view.getHeight() / 2);
         springView.animCreate();
-
-        setSelectedTextColor(viewPager.getCurrentItem());
     }
 
 
@@ -161,6 +164,7 @@ public class SpringIndicator extends FrameLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         createPoints();
+        setSelectedTextColor(viewPager.getCurrentItem());
     }
 
 
@@ -222,7 +226,7 @@ public class SpringIndicator extends FrameLayout {
                 // set indicator colors
                 if (indicatorColorsId != 0){
                     float length = (position + positionOffset) / viewPager.getAdapter().getCount();
-                    int progress = (int) (length * DURATION);
+                    int progress = (int) (length * INDICATOR_ANIM_DURATION);
                     seek(progress);
                 }
 
@@ -263,7 +267,7 @@ public class SpringIndicator extends FrameLayout {
     private void createColorAnim(){
         indicatorColorAnim = ObjectAnimator.ofInt(springView, "indicatorColor", indicatorColorArray);
         indicatorColorAnim.setEvaluator(new ArgbEvaluator());
-        indicatorColorAnim.setDuration(DURATION);
+        indicatorColorAnim.setDuration(INDICATOR_ANIM_DURATION);
     }
 
     private void seek(long seekTime) {

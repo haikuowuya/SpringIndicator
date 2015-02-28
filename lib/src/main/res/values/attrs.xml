@@ -12,5 +12,9 @@
 
         <attr name="indicatorColors" format="reference"/>
 
+        <attr name="radiusMax" format="dimension"/>
+
+        <attr name="radiusMin" format="dimension"/>
+
     </declare-styleable>
 </resources>
