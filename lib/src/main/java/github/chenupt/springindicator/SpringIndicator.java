@@ -133,24 +133,21 @@ public class SpringIndicator extends FrameLayout {
         }
     }
 
-    private void createHeadPoint() {
+    private void createPoints(){
         View view = tabs.get(viewPager.getCurrentItem());
         springView.getHeadPoint().setX(view.getX() + view.getWidth() / 2);
         springView.getHeadPoint().setY(view.getY() + view.getHeight() / 2);
-    }
-
-    private void createFootPoint() {
-        View view = tabs.get(viewPager.getCurrentItem());
         springView.getFootPoint().setX(view.getX() + view.getWidth() / 2);
         springView.getFootPoint().setY(view.getY() + view.getHeight() / 2);
+
+        setSelectedTextColor(viewPager.getCurrentItem());
     }
 
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        createHeadPoint();
-        createFootPoint();
+        createPoints();
     }
 
 
@@ -204,9 +201,14 @@ public class SpringIndicator extends FrameLayout {
                         springView.getFootPoint().setRadius(radiusMax);
                     }
 
-                    springView.postInvalidate();
-
+                } else {
+                    springView.getHeadPoint().setX(getTabX(position));
+                    springView.getFootPoint().setX(getTabX(position));
+                    springView.getHeadPoint().setRadius(radiusMax);
+                    springView.getFootPoint().setRadius(radiusMax);
                 }
+
+                springView.postInvalidate();
 
                 if(delegateListener != null){
                     delegateListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
