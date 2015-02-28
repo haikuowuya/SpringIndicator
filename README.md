@@ -1,7 +1,7 @@
 # SpringIndicator
 A indicator like Morning Routine guide.
 The sample app: [click me](https://github.com/chenupt/SpringIndicator/raw/master/img/springindicator_1.0.0.apk)
-![gif](https://raw.githubusercontent.com/chenupt/SpringIndicator/master/img/s_1.0.0.gif)
+![gif](https://raw.githubusercontent.com/chenupt/SpringIndicator/master/img/si_1.0.0.gif)
 
 #Usage
 ---
