@@ -54,6 +54,8 @@ public class SpringView extends View {
     }
 
     private void init(){
+        setAlpha(0);
+
         headPoint = new Point();
         footPoint = new Point();
 
@@ -107,7 +109,6 @@ public class SpringView extends View {
     }
 
     public void animCreate(){
-        setAlpha(0);
         setPivotX(getHeadPoint().getX());
         setPivotY(getFootPoint().getY());
         AnimatorSet animatorSet = new AnimatorSet();
@@ -117,7 +118,7 @@ public class SpringView extends View {
         animatorSet.play(oaX).with(oaY).with(oaA);
         animatorSet.setDuration(500);
         animatorSet.setInterpolator(new OvershootInterpolator());
-        animatorSet.setStartDelay(200);
+        animatorSet.setStartDelay(300);
         animatorSet.start();
     }
 
