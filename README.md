@@ -9,12 +9,8 @@ The sample app: [click me](https://github.com/chenupt/SpringIndicator/raw/master
 ---
 Add the dependency to your build.gradle.
 ```
-maven {
-    url "https://oss.sonatype.org/content/repositories/snapshots/"
-}
-
 dependencies {
-    compile 'com.github.chenupt.android:springindicator:1.0.0-SNAPSHOT@aar'
+    compile 'com.github.chenupt.android:springindicator:1.0.0@aar'
 }
 ```
 Add the indicator to your layout.
