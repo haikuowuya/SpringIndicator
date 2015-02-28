@@ -55,6 +55,9 @@ public class SpringIndicator extends FrameLayout {
 
     private List<TextView> tabs;
 
+    private ViewPager.OnPageChangeListener delegateListener;
+    private TabClickListener tabClickListener;
+
     public SpringIndicator(Context context) {
         this(context, null);
     }
@@ -120,7 +123,9 @@ public class SpringIndicator extends FrameLayout {
             textView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    viewPager.setCurrentItem(position);
+                    if(tabClickListener == null || tabClickListener.onTabClick(position)){
+                        viewPager.setCurrentItem(position);
+                    }
                 }
             });
             tabs.add(textView);
@@ -156,6 +161,9 @@ public class SpringIndicator extends FrameLayout {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 setSelectedTextColor(position);
+                if(delegateListener != null){
+                    delegateListener.onPageSelected(position);
+                }
             }
 
             @Override
@@ -199,6 +207,18 @@ public class SpringIndicator extends FrameLayout {
                     springView.postInvalidate();
 
                 }
+
+                if(delegateListener != null){
+                    delegateListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+                if(delegateListener != null){
+                    delegateListener.onPageScrollStateChanged(state);
+                }
             }
         });
     }
@@ -225,5 +245,13 @@ public class SpringIndicator extends FrameLayout {
 
     public List<TextView> getTabs(){
         return tabs;
+    }
+
+    public void setOnPagerChangeListener(ViewPager.OnPageChangeListener listener){
+        this.delegateListener = listener;
+    }
+
+    public void setOnTabClickListener(TabClickListener listener){
+        this.tabClickListener = listener;
     }
 }
