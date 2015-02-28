@@ -1,5 +1,5 @@
 # SpringIndicator
-A indicator like Morning Routine guide.
+An indicator like Morning Routine guide.
 
 The sample app: [click me](https://github.com/chenupt/SpringIndicator/raw/master/img/springindicator_1.0.0.apk)
 
