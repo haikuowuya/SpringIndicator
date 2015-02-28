@@ -16,6 +16,8 @@
 
 package github.chenupt.springindicator;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -24,6 +26,7 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 
 /**
  * Created by chenupt@gmail.com on 2015/1/31.
@@ -36,8 +39,6 @@ public class SpringView extends View {
 
     private Point headPoint;
     private Point footPoint;
-
-    private int indicatorColor;
 
     public SpringView(Context context) {
         this(context, null);
@@ -105,6 +106,21 @@ public class SpringView extends View {
         super.onDraw(canvas);
     }
 
+    public void animCreate(){
+        setAlpha(0);
+        setPivotX(getHeadPoint().getX());
+        setPivotY(getFootPoint().getY());
+        AnimatorSet animatorSet = new AnimatorSet();
+        ObjectAnimator oaX = ObjectAnimator.ofFloat(this, "scaleX", 0.3f, 1f);
+        ObjectAnimator oaY = ObjectAnimator.ofFloat(this, "scaleY", 0.3f, 1f);
+        ObjectAnimator oaA = ObjectAnimator.ofFloat(this, "alpha", 0.0f, 1f);
+        animatorSet.play(oaX).with(oaY).with(oaA);
+        animatorSet.setDuration(500);
+        animatorSet.setInterpolator(new OvershootInterpolator());
+        animatorSet.setStartDelay(200);
+        animatorSet.start();
+    }
+
     public Point getHeadPoint() {
         return headPoint;
     }
@@ -114,7 +130,10 @@ public class SpringView extends View {
     }
 
     public void setIndicatorColor(int color){
-        this.indicatorColor = color;
         paint.setColor(color);
+    }
+
+    public int getIndicatorColor(){
+        return paint.getColor();
     }
 }

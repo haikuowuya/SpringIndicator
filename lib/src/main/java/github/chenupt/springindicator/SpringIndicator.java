@@ -16,6 +16,8 @@
 
 package github.chenupt.springindicator;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.view.ViewPager;
@@ -37,6 +39,8 @@ import java.util.List;
  */
 public class SpringIndicator extends FrameLayout {
 
+    private static final int DURATION = 3000;
+
     private float acceleration = 0.5f;
     private float headMoveOffset = 0.6f;
     private float footMoveOffset = 1- headMoveOffset;
@@ -48,6 +52,8 @@ public class SpringIndicator extends FrameLayout {
     private int textColorId;
     private int selectedTextColorId;
     private int indicatorColorId;
+    private int indicatorColorsId;
+    private int[] indicatorColorArray;
 
     private LinearLayout tabContainer;
     private SpringView springView;
@@ -57,6 +63,7 @@ public class SpringIndicator extends FrameLayout {
 
     private ViewPager.OnPageChangeListener delegateListener;
     private TabClickListener tabClickListener;
+    private ObjectAnimator indicatorColorAnim;
 
     public SpringIndicator(Context context) {
         this(context, null);
@@ -78,7 +85,12 @@ public class SpringIndicator extends FrameLayout {
         selectedTextColorId = a.getResourceId(R.styleable.SpringIndicator_selectedTextColor, selectedTextColorId);
         textSize = a.getDimension(R.styleable.SpringIndicator_textSize, textSize);
         indicatorColorId = a.getResourceId(R.styleable.SpringIndicator_indicatorColor, indicatorColorId);
+        indicatorColorsId = a.getResourceId(R.styleable.SpringIndicator_indicatorColors, 0);
         a.recycle();
+
+        if(indicatorColorsId != 0){
+            indicatorColorArray = getResources().getIntArray(indicatorColorsId);
+        }
     }
 
 
@@ -139,6 +151,7 @@ public class SpringIndicator extends FrameLayout {
         springView.getHeadPoint().setY(view.getY() + view.getHeight() / 2);
         springView.getFootPoint().setX(view.getX() + view.getWidth() / 2);
         springView.getFootPoint().setY(view.getY() + view.getHeight() / 2);
+        springView.animCreate();
 
         setSelectedTextColor(viewPager.getCurrentItem());
     }
@@ -166,7 +179,6 @@ public class SpringIndicator extends FrameLayout {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position < tabs.size() - 1) {
-
                     // radius
                     float radiusOffsetHead = 0.5f;
                     if(positionOffset < radiusOffsetHead){
@@ -195,12 +207,11 @@ public class SpringIndicator extends FrameLayout {
                     }
                     springView.getFootPoint().setX(getTabX(position) - footX * getPositionDistance(position));
 
-
+                    // reset radius
                     if(positionOffset == 0){
                         springView.getHeadPoint().setRadius(radiusMax);
                         springView.getFootPoint().setRadius(radiusMax);
                     }
-
                 } else {
                     springView.getHeadPoint().setX(getTabX(position));
                     springView.getFootPoint().setX(getTabX(position));
@@ -208,8 +219,14 @@ public class SpringIndicator extends FrameLayout {
                     springView.getFootPoint().setRadius(radiusMax);
                 }
 
-                springView.postInvalidate();
+                // set indicator colors
+                if (indicatorColorsId != 0){
+                    float length = (position + positionOffset) / viewPager.getAdapter().getCount();
+                    int progress = (int) (length * DURATION);
+                    seek(progress);
+                }
 
+                springView.postInvalidate();
                 if(delegateListener != null){
                     delegateListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
                 }
@@ -226,13 +243,6 @@ public class SpringIndicator extends FrameLayout {
     }
 
 
-    private void setSelectedTextColor(int position){
-        for (TextView tab : tabs) {
-            tab.setTextColor(textColorId);
-        }
-        tabs.get(position).setTextColor(getResources().getColor(selectedTextColorId));
-    }
-
     private float getPositionDistance(int position) {
         float tarX = tabs.get(position + 1).getX();
         float oriX = tabs.get(position).getX();
@@ -243,7 +253,25 @@ public class SpringIndicator extends FrameLayout {
         return tabs.get(position).getX() + tabs.get(position).getWidth() / 2;
     }
 
+    private void setSelectedTextColor(int position){
+        for (TextView tab : tabs) {
+            tab.setTextColor(textColorId);
+        }
+        tabs.get(position).setTextColor(getResources().getColor(selectedTextColorId));
+    }
 
+    private void createColorAnim(){
+        indicatorColorAnim = ObjectAnimator.ofInt(springView, "indicatorColor", indicatorColorArray);
+        indicatorColorAnim.setEvaluator(new ArgbEvaluator());
+        indicatorColorAnim.setDuration(DURATION);
+    }
+
+    private void seek(long seekTime) {
+        if (indicatorColorAnim == null) {
+            createColorAnim();
+        }
+        indicatorColorAnim.setCurrentPlayTime(seekTime);
+    }
 
     public List<TextView> getTabs(){
         return tabs;
