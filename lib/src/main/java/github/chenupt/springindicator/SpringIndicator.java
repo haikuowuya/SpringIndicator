@@ -46,6 +46,7 @@ public class SpringIndicator extends FrameLayout {
 
     private float textSize;
     private int textColorId;
+    private int selectedTextColorId;
     private int indicatorColorId;
 
     private LinearLayout tabContainer;
@@ -65,12 +66,14 @@ public class SpringIndicator extends FrameLayout {
 
     private void initAttrs(AttributeSet attrs){
         textColorId = R.color.default_text_color;
+        selectedTextColorId = R.color.default_text_color_selected;
         indicatorColorId = R.color.default_indicator_bg;
         textSize = getResources().getDimension(R.dimen.default_text_size);
 
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SpringIndicator);
-        textColorId = a.getResourceId(R.styleable.SpringIndicator_android_textColor, textColorId);
-        textSize = a.getDimension(R.styleable.SpringIndicator_android_textSize, textSize);
+        textColorId = a.getResourceId(R.styleable.SpringIndicator_textColor, textColorId);
+        selectedTextColorId = a.getResourceId(R.styleable.SpringIndicator_selectedTextColor, selectedTextColorId);
+        textSize = a.getDimension(R.styleable.SpringIndicator_textSize, textSize);
         indicatorColorId = a.getResourceId(R.styleable.SpringIndicator_indicatorColor, indicatorColorId);
         a.recycle();
     }
@@ -148,6 +151,13 @@ public class SpringIndicator extends FrameLayout {
 
     private void setUpListener(){
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                setSelectedTextColor(position);
+            }
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position < tabs.size() - 1) {
@@ -191,6 +201,14 @@ public class SpringIndicator extends FrameLayout {
                 }
             }
         });
+    }
+
+
+    private void setSelectedTextColor(int position){
+        for (TextView tab : tabs) {
+            tab.setTextColor(textColorId);
+        }
+        tabs.get(position).setTextColor(getResources().getColor(selectedTextColorId));
     }
 
     private float getPositionDistance(int position) {

@@ -26,8 +26,9 @@
             android:layout_gravity="center" />
 
         <github.chenupt.springindicator.SpringIndicator xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:textSize="18sp"
-            android:textColor="@color/colorPrimaryDark"
+            app:textSize="18sp"
+            app:textColor="@color/colorPrimaryDark"
+            app:selectedTextColor="@android:color/white"
             app:indicatorColor="@color/colorPrimary"
             android:id="@+id/indicator"
             android:layout_width="match_parent"

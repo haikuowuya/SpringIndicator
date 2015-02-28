@@ -2,9 +2,11 @@
 <resources>
     <declare-styleable name="SpringIndicator">
 
-        <attr name="android:textColor"/>
+        <attr name="textColor" format="reference"/>
 
-        <attr name="android:textSize"/>
+        <attr name="selectedTextColor" format="reference"/>
+
+        <attr name="textSize" format="dimension"/>
 
         <attr name="indicatorColor" format="reference"/>
 
