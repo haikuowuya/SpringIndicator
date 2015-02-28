@@ -8,6 +8,9 @@
         <!--tab text color which is selected-->
         <attr name="selectedTextColor" format="reference"/>
 
+        <!--tab item bg -->
+        <attr name="textBg" format="reference"/>
+
         <!--tab text size-->
         <attr name="textSize" format="dimension"/>
 

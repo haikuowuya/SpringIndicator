@@ -50,6 +50,7 @@ public class SpringIndicator extends FrameLayout {
 
     private float textSize;
     private int textColorId;
+    private int textBgResId;
     private int selectedTextColorId;
     private int indicatorColorId;
     private int indicatorColorsId;
@@ -86,6 +87,7 @@ public class SpringIndicator extends FrameLayout {
         textColorId = a.getResourceId(R.styleable.SpringIndicator_textColor, textColorId);
         selectedTextColorId = a.getResourceId(R.styleable.SpringIndicator_selectedTextColor, selectedTextColorId);
         textSize = a.getDimension(R.styleable.SpringIndicator_textSize, textSize);
+        textBgResId = a.getResourceId(R.styleable.SpringIndicator_textBg, 0);
         indicatorColorId = a.getResourceId(R.styleable.SpringIndicator_indicatorColor, indicatorColorId);
         indicatorColorsId = a.getResourceId(R.styleable.SpringIndicator_indicatorColors, 0);
         radiusMax = a.getDimension(R.styleable.SpringIndicator_radiusMax, radiusMax);
@@ -131,10 +133,15 @@ public class SpringIndicator extends FrameLayout {
         tabs = new ArrayList<>();
         for (int i = 0; i < viewPager.getAdapter().getCount(); i++) {
             TextView textView = new TextView(getContext());
-            textView.setText(viewPager.getAdapter().getPageTitle(i));
+            if(viewPager.getAdapter().getPageTitle(i) != null){
+                textView.setText(viewPager.getAdapter().getPageTitle(i));
+            }
             textView.setGravity(Gravity.CENTER);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             textView.setTextColor(getResources().getColor(textColorId));
+            if (textBgResId != 0){
+                textView.setBackgroundResource(textBgResId);
+            }
             textView.setLayoutParams(layoutParams);
             final int position = i;
             textView.setOnClickListener(new OnClickListener() {
