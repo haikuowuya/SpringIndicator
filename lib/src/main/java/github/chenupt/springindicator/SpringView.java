@@ -115,6 +115,6 @@ public class SpringView extends View {
 
     public void setIndicatorColor(int color){
         this.indicatorColor = color;
-        paint.setColor(Color.RED);
+        paint.setColor(color);
     }
 }

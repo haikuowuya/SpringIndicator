@@ -44,9 +44,9 @@ public class SpringIndicator extends FrameLayout {
     private float radiusMin = 20;
     private float radiusOffset = radiusMax - radiusMin;
 
-    private float textSize = 18.0f;
-    private int textColor = android.R.color.white;
-    private int indicatorColor = android.R.color.black;
+    private float textSize;
+    private int textColorId;
+    private int indicatorColorId;
 
     private LinearLayout tabContainer;
     private SpringView springView;
@@ -64,10 +64,14 @@ public class SpringIndicator extends FrameLayout {
     }
 
     private void initAttrs(AttributeSet attrs){
+        textColorId = R.color.default_text_color;
+        indicatorColorId = R.color.default_indicator_bg;
+        textSize = getResources().getDimension(R.dimen.default_text_size);
+
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SpringIndicator);
-        textColor = a.getResourceId(R.styleable.SpringIndicator_android_textColor, textColor);
+        textColorId = a.getResourceId(R.styleable.SpringIndicator_android_textColor, textColorId);
         textSize = a.getDimension(R.styleable.SpringIndicator_android_textSize, textSize);
-        indicatorColor = a.getResourceId(R.styleable.SpringIndicator_indicatorColor, indicatorColor);
+        indicatorColorId = a.getResourceId(R.styleable.SpringIndicator_indicatorColor, indicatorColorId);
         a.recycle();
     }
 
@@ -87,7 +91,7 @@ public class SpringIndicator extends FrameLayout {
 
     private void addPointView() {
         springView = new SpringView(getContext());
-        springView.setIndicatorColor(indicatorColor);
+        springView.setIndicatorColor(getResources().getColor(indicatorColorId));
         addView(springView);
     }
 
@@ -107,7 +111,7 @@ public class SpringIndicator extends FrameLayout {
             textView.setText(viewPager.getAdapter().getPageTitle(i));
             textView.setGravity(Gravity.CENTER);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-            textView.setTextColor(getResources().getColor(textColor));
+            textView.setTextColor(getResources().getColor(textColorId));
             textView.setLayoutParams(layoutParams);
             final int position = i;
             textView.setOnClickListener(new OnClickListener() {

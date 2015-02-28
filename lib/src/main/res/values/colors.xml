@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_test">#607d8b</color>
+    <color name="default_text_color">#FF0000</color>
+    <color name="default_indicator_bg">#ee9999</color>
 </resources>

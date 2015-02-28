@@ -31,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
 
         PagerModelManager manager = new PagerModelManager();
-        manager.addCommonFragment(GuideFragment.class, getTitles(), getTitles());
+        manager.addCommonFragment(GuideFragment.class, getBgRes(), getTitles());
         ModelPagerAdapter adapter = new ModelPagerAdapter(getSupportFragmentManager(), manager);
         viewPager.setAdapter(adapter);
 
@@ -40,6 +40,10 @@ public class MainActivity extends ActionBarActivity {
 
     private List<String> getTitles(){
         return Lists.newArrayList("1", "2", "3", "4");
+    }
+
+    private List<Integer> getBgRes(){
+        return Lists.newArrayList(R.drawable.bg1, R.drawable.bg2, R.drawable.bg3, R.drawable.bg4);
     }
 
 
