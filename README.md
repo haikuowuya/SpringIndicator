@@ -40,6 +40,7 @@ springIndicator.setViewPager(viewPager);
 Developed By
 ---
  * Chenupt - <chenupt@gmail.com>
+ * G+ [chenupt](https://plus.google.com/u/0/109194013506774756478)
  * 微博：[chenupt](http://weibo.com/p/1005052159173535/home)
  * QQ：753785666
 
